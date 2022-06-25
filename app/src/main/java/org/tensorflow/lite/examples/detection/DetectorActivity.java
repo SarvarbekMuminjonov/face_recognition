@@ -136,6 +136,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
   private void onAddClick() {
     addPending = true;
+    processImage();
     //Toast.makeText(this, "click", Toast.LENGTH_LONG ).show();
   }
 
