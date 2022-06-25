@@ -114,15 +114,13 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
   // here the face is cropped and drawn
   private Bitmap faceBmp = null;
 
-  //private HashMap<String, Classifier.Recognition> knownFaces = new HashMap<>();
-
-
   @RequiresApi(api = Build.VERSION_CODES.M)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     FloatingActionButton fabAdd = findViewById(R.id.fab_add);
+    //
     fabAdd.setOnClickListener(view -> onAddClick());
 
     // Real-time contour detection of multiple faces
@@ -134,7 +132,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                     .build();
     faceDetector = FaceDetection.getClient(options);
   }
-
 
 
   private void onAddClick() {
@@ -149,10 +146,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                     TypedValue.COMPLEX_UNIT_DIP, TEXT_SIZE_DIP, getResources().getDisplayMetrics());
     BorderedText borderedText = new BorderedText(textSizePx);
     borderedText.setTypeface(Typeface.MONOSPACE);
-
     tracker = new MultiBoxTracker(this);
-
-
     try {
       detector =
               TFLiteObjectDetectionAPIModel.create(
@@ -195,10 +189,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     int cropH = (int) (targetH / 2.0);
 
     croppedBitmap = Bitmap.createBitmap(cropW, cropH, Config.ARGB_8888);
-
     portraitBmp = Bitmap.createBitmap(targetW, targetH, Config.ARGB_8888);
     faceBmp = Bitmap.createBitmap(TF_OD_API_INPUT_SIZE, TF_OD_API_INPUT_SIZE, Config.ARGB_8888);
-
     frameToCropTransform =
             ImageUtils.getTransformationMatrix(
                     previewWidth, previewHeight,
@@ -207,13 +199,10 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     cropToFrameTransform = new Matrix();
     frameToCropTransform.invert(cropToFrameTransform);
 
-
     ImageUtils.getTransformationMatrix(
             previewWidth, previewHeight,
             targetW, targetH,
             sensorOrientation, MAINTAIN_ASPECT);
-
-
 
     trackingOverlay = (OverlayView) findViewById(R.id.tracking_overlay);
     trackingOverlay.addCallback(
@@ -226,7 +215,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
     tracker.setFrameConfiguration(previewWidth, previewHeight, sensorOrientation);
   }
-
 
   @Override
   protected void processImage() {
@@ -268,7 +256,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                         addPending = false;
                       });
             });
-
 
   }
 
@@ -357,25 +344,19 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     tracker.trackResults(mappedRecognitions, currTimestamp);
     trackingOverlay.postInvalidate();
     computingDetection = false;
-    //adding = false;
-
-
     if (mappedRecognitions.size() > 0) {
        LOGGER.i("Adding results");
        SimilarityClassifier.Recognition rec = mappedRecognitions.get(0);
        if (rec.getExtra() != null) {
          showAddFaceDialog(rec);
        }
-
     }
-
     runOnUiThread(
             () -> {
               showFrameInfo(previewWidth + "x" + previewHeight);
               showCropInfo(croppedBitmap.getWidth() + "x" + croppedBitmap.getHeight());
               showInference(lastProcessingTimeMs + "ms");
             });
-
   }
 
   private void onFacesDetected(long currTimestamp, List<Face> faces, boolean add) {
@@ -434,7 +415,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
       String label = "";
       float confidence = -1f;
-      int color = Color.BLUE;
+      int color = Color.RED;
       Object extra = null;
       Bitmap crop = null;
 
@@ -458,7 +439,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
         float conf = result.getDistance();
         if (conf < 1.0f) {
-
           confidence = conf;
           label = result.getTitle();
           if (result.getId().equals("0")) {
@@ -468,13 +448,9 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             color = Color.RED;
           }
         }
-
       }
 
       if (getCameraFacing() == CameraCharacteristics.LENS_FACING_FRONT) {
-
-        // camera is frontal so the image is flipped horizontally
-        // flips horizontally
         Matrix flip = new Matrix();
         if (sensorOrientation == 90 || sensorOrientation == 270) {
           flip.postScale(1, -1, previewWidth / 2.0f, previewHeight / 2.0f);
@@ -495,12 +471,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
       result.setExtra(extra);
       result.setCrop(crop);
       mappedRecognitions.add(result);
-
-
     }
     updateResults(currTimestamp, mappedRecognitions);
-
-
   }
 
 

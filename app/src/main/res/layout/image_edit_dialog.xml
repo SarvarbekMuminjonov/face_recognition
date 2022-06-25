@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    >
 
     <TextView
         android:id="@+id/dlg_title"
@@ -22,7 +23,7 @@
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
         android:src="@drawable/ic_baseline_image_24"
-        />
+        tools:ignore="ContentDescription" />
 
     <EditText
         android:layout_gravity="center"
@@ -30,7 +31,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:hint="The dialog hint"
-        />
+        android:inputType="text"
+        tools:ignore="LabelFor" />
 
 
 </LinearLayout>
