@@ -21,6 +21,7 @@ import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
@@ -99,9 +100,6 @@ public abstract class CameraActivity extends AppCompatActivity
     return useFacing;
   }
 
-
-
-
   @RequiresApi(api = Build.VERSION_CODES.M)
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
@@ -111,6 +109,7 @@ public abstract class CameraActivity extends AppCompatActivity
     useFacing = intent.getIntExtra(KEY_USE_FACING, CameraCharacteristics.LENS_FACING_BACK);
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     setContentView(R.layout.tfe_od_activity_camera);
+    this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
     Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
@@ -192,20 +191,15 @@ public abstract class CameraActivity extends AppCompatActivity
   }
 
   public void switchCamera() {
-
     Intent intent = getIntent();
-
     if (useFacing == CameraCharacteristics.LENS_FACING_FRONT) {
       useFacing = CameraCharacteristics.LENS_FACING_BACK;
     } else {
       useFacing = CameraCharacteristics.LENS_FACING_FRONT;
     }
-
     intent.putExtra(KEY_USE_FACING, useFacing);
     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
     restartWith(intent);
-
   }
 
   private void restartWith(Intent intent) {

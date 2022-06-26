@@ -62,10 +62,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * An activity that uses a TensorFlowMultiBoxDetector and ObjectTracker to detect and then track
- * objects.
- */
+
 public class DetectorActivity extends CameraActivity implements OnImageAvailableListener {
   private static final Logger LOGGER = new Logger();
 
@@ -73,15 +70,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
   private static final int TF_OD_API_INPUT_SIZE = 112;
   private static final boolean TF_OD_API_IS_QUANTIZED = false;
   private static final String TF_OD_API_MODEL_FILE = "mobile_face_net.tflite";
-
-
   private static final String TF_OD_API_LABELS_FILE = "file:///android_asset/labelmap.txt";
-
   // Minimum detection confidence to track a detection.
   private static final boolean MAINTAIN_ASPECT = false;
 
   private static final Size DESIRED_PREVIEW_SIZE = new Size(640, 480);
-
 
   private static final boolean SAVE_PREVIEW_BITMAP = false;
   private static final float TEXT_SIZE_DIP = 10;
@@ -118,10 +111,13 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
     FloatingActionButton fabAdd = findViewById(R.id.fab_add);
-    //
-    fabAdd.setOnClickListener(view -> onAddClick());
+    fabAdd.setOnClickListener(view -> {
+      addPending = true;
+      System.out.println("plus button clicked");
+      processImage();
+    }
+  );
 
     // Real-time contour detection of multiple faces
     FaceDetectorOptions options =
@@ -134,11 +130,11 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
   }
 
 
-  private void onAddClick() {
-    addPending = true;
-    processImage();
-    //Toast.makeText(this, "click", Toast.LENGTH_LONG ).show();
-  }
+//  private void onAddClick() {
+//    addPending = true;
+//    processImage();
+//    //Toast.makeText(this, "click", Toast.LENGTH_LONG ).show();
+//  }
 
   @Override
   public void onPreviewSizeChosen(final Size size, final int rotation) {
@@ -229,20 +225,15 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
       return;
     }
     computingDetection = true;
-
     LOGGER.i("Preparing image " + currTimestamp + " for detection in bg thread.");
-
     rgbFrameBitmap.setPixels(getRgbBytes(), 0, previewWidth, 0, 0, previewWidth, previewHeight);
-
     readyForNextImage();
-
     final Canvas canvas = new Canvas(croppedBitmap);
     canvas.drawBitmap(rgbFrameBitmap, frameToCropTransform, null);
     // For examining the actual TF input.
     if (SAVE_PREVIEW_BITMAP) {
       ImageUtils.saveBitmap(croppedBitmap);
     }
-
     InputImage image = InputImage.fromBitmap(croppedBitmap, 0);
     faceDetector
             .process(image)
@@ -445,9 +436,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
           if (result.getId().equals("0")) {
             color = Color.GREEN;
           }
-          else {
-            color = Color.RED;
-          }
+
         }
       }
 
