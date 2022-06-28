@@ -136,9 +136,7 @@ public class TFLiteObjectDetectionAPIModel
       d.labels.add(line);
     }
     br.close();
-
     d.inputSize = inputSize;
-
     try {
       d.tfLite = new Interpreter(loadModelFile(assetManager, modelFilename));
     } catch (Exception e) {
@@ -167,11 +165,11 @@ public class TFLiteObjectDetectionAPIModel
   // looks for the nearest embeeding in the dataset (using L2 norm)
   // and retrurns the pair <id, distance>
   private Pair<String, Float> findNearest(float[] emb) {
-
     Pair<String, Float> ret = null;
     for (Map.Entry<String, Recognition> entry : registered.entrySet()) {
         final String name = entry.getKey();
         final float[] knownEmb = ((float[][]) entry.getValue().getExtra())[0];
+
 
         float distance = 0;
         for (int i = 0; i < emb.length; i++) {

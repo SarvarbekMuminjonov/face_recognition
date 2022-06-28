@@ -65,7 +65,6 @@ import java.util.List;
 
 public class DetectorActivity extends CameraActivity implements OnImageAvailableListener {
   private static final Logger LOGGER = new Logger();
-
   // MobileFaceNet
   private static final int TF_OD_API_INPUT_SIZE = 112;
   private static final boolean TF_OD_API_IS_QUANTIZED = false;
@@ -114,7 +113,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     FloatingActionButton fabAdd = findViewById(R.id.fab_add);
     fabAdd.setOnClickListener(view -> {
       addPending = true;
-      System.out.println("plus button clicked");
       processImage();
     }
   );
@@ -129,12 +127,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     faceDetector = FaceDetection.getClient(options);
   }
 
-
-//  private void onAddClick() {
-//    addPending = true;
-//    processImage();
-//    //Toast.makeText(this, "click", Toast.LENGTH_LONG ).show();
-//  }
 
   @Override
   public void onPreviewSizeChosen(final Size size, final int rotation) {
@@ -218,7 +210,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
     ++timestamp;
     final long currTimestamp = timestamp;
     trackingOverlay.postInvalidate();
-
     // No mutex needed as this method is not reentrant.
     if (computingDetection) {
       readyForNextImage();
@@ -305,14 +296,12 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
   @SuppressLint("SetTextI18n")
   private void showAddFaceDialog(SimilarityClassifier.Recognition rec) {
-
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     LayoutInflater inflater = getLayoutInflater();
     View dialogLayout = inflater.inflate(R.layout.image_edit_dialog, null);
     ImageView ivFace = dialogLayout.findViewById(R.id.dlg_image);
     TextView tvTitle = dialogLayout.findViewById(R.id.dlg_title);
     EditText etName = dialogLayout.findViewById(R.id.dlg_input);
-
     tvTitle.setText("Add Face");
     ivFace.setImageBitmap(rec.getCrop());
     etName.setHint("Input name");
@@ -323,7 +312,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             return;
         }
         detector.register(name, rec);
-        //knownFaces.put(name, rec);
         dlg.dismiss();
     });
     builder.setView(dialogLayout);
@@ -332,7 +320,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
   }
 
   private void updateResults(long currTimestamp, final List<SimilarityClassifier.Recognition> mappedRecognitions) {
-
     tracker.trackResults(mappedRecognitions, currTimestamp);
     trackingOverlay.postInvalidate();
     computingDetection = false;
@@ -410,7 +397,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
       int color = Color.RED;
       Object extra = null;
       Bitmap crop = null;
-
       if (add) {
         crop = Bitmap.createBitmap(portraitBmp,
                           (int) faceBB.left,
