@@ -20,6 +20,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -32,6 +33,7 @@ import android.media.ImageReader.OnImageAvailableListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.util.Size;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -58,6 +60,7 @@ import org.tensorflow.lite.examples.detection.tflite.SimilarityClassifier;
 import org.tensorflow.lite.examples.detection.tflite.TFLiteObjectDetectionAPIModel;
 import org.tensorflow.lite.examples.detection.tracking.MultiBoxTracker;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -401,8 +404,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         crop = Bitmap.createBitmap(portraitBmp,
                           (int) faceBB.left,
                           (int) faceBB.top,
-                          (int) faceBB.width(),
-                          (int) faceBB.height());
+                          (int) faceBB.width()-20,
+                          (int) faceBB.height()-100);
       }
 
       final long startTime = SystemClock.uptimeMillis();
