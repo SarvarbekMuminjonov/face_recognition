@@ -405,7 +405,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                           (int) faceBB.left,
                           (int) faceBB.top,
                           (int) faceBB.width()-20,
-                          (int) faceBB.height()-100);
+                          (int) faceBB.height()-20);
       }
 
       final long startTime = SystemClock.uptimeMillis();
